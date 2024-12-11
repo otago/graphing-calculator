@@ -1,219 +1,116 @@
+
+<!DOCTYPE html>
 <html>
+    <head>
+        <script src="https://www.desmos.com/api/v1.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+
+<link rel="stylesheet" href="mathquill.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="mathquill.js"></script>
+
+<script>
+var MQ = MathQuill.getInterface(2);
+</script>
 
 
-<head>
-
-<title>Te Pūkenga Examination Timer</title>
-<style>
+        <style>
 <!--
-#clockOutput {color:white; font-size:120pt; font-family:arial}
-#timeline {width:1200px; height:10px; background:white; visibility:hidden}
-#startButton{
-                    display: inline-block;
-                    outline: none;
-                    cursor: pointer;
-                    font-size: 24px;
-                    line-height: 1;
-                    border-radius: 500px;
-                    transition-property: background-color,border-color,color,box-shadow,filter;
-                    transition-duration: 1s;
-                    border: 1px solid transparent;
-                    letter-spacing: 2px;
-                    min-width: 160px;
-                    text-transform: uppercase;
-                    white-space: normal;
-                    font-weight: 700;
-                    text-align: center;
-                    padding: 26px 24px 48px;
-                    color: #fff;
-                    background-color: #024E9B;
-                    height: 58px;
-		
-                
-              }
+body {margin-top:0; margin-left:0; margin-right:0; margin-bottom:0}
 
-#startButton:hover{
-                        background-color: Black; box-shadow:0px 10px 6px black}
-
-
-#cursor {width:10px; height:50px; background:white; position:relative; top:-20; left:-600;}
-#marker1 {width:6px; height:30px; background:white; position:relative; top:-60; left:-400;}
-#marker2 {width:6px; height:30px; background:white; position:relative; top:-90; left:-200;}
-#marker3 {width:6px; height:30px; background:white; position:relative; top:-120; left:-200;}
-#instruction {color:white; font-size:50pt; font-family:arial}
-.small {font-size:24pt}
-body {  background-image: linear-gradient(to bottom right, #275ACE, #00205C);
-}
+            #calculator {
+              width: 100vw;
+              height: 100vh
+            }
+			
+			.input {position:absolute; font-size:30pt; border-color:#ffffff; border:0}
+		.input:hover{color:#00aaff}
 -->
-</style>
+          </style>
+    </head>
+    <body>
+
+        <div id="calculator"></div>
+        
+
+
+        <script>
+            var calculatorElt = document.getElementById('calculator');
+            var calculator = Desmos.GraphingCalculator(calculatorElt,{
+        brailleControls: false,
+        audio: false,
+        keypad: false,
+        zoomButtons: false,
+        expressionsTopbar: false, 
+	showGrid:false,
+	border:false,
+	settingsMenu:false,
+expressions:false
+
+    });
+
+
+        </script>     
+
+
+
+
+
+
+
+
+
 
 
 <script>
-<!--
+ 
 
-var seconds = 0; 
-var hours = 3;
-var minutes = 10;
-var totalSeconds = seconds+60*minutes+60*60*hours;
-var cc = 0;
+ 
+ function loadField(a) {
+	
+ 
+  var answerMathField = MQ.MathField(a, {
+    handlers: {
+      edit: function() {
+        let enteredMath = answerMathField.latex(); // Get entered math in LaTeX format
+        calculator.setExpression({id:a.id,latex:enteredMath});
+      }
+    }
+  })
 
-function tick() {
+ }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+i=0;
+ 
+ window.oncontextmenu=function() {
+	i++;
+	 var newInputField = document.createElement('div')
+	 newInputField.classList.add("input");
+	  newInputField.id=i;
+	 newInputField.style.position="absolute";
+	newInputField.style.top=Math.round(event.clientY/100)*100+"px";
+	newInputField.style.left=Math.round(event.clientX/100)*100+"px";
+	newInputField.innerHTML="="
+	//newInputField.tabIndex=i;
+	
+ document.body.appendChild(newInputField)
+ loadField(newInputField)
 
-document.getElementById('startButton').style.visibility="hidden"
-document.getElementById('timeline').style.visibility="visible"
-cc++
-
-seconds--
-
-if(seconds<0) {
-seconds = 59;
-minutes--}
-
-if(minutes<0) {
-minutes = 59;
-hours--}
-
-
-document.getElementById('clockOutput').innerHTML=(hours<10?"0":"")+hours +" : "+(minutes<10?"0":"")+minutes +" : "+(seconds<10?"0":"")+seconds;
-document.getElementById('cursor').style.left = -600+Math.round(2*1200/totalSeconds*cc)/2
-
-
-
-//----------Cursor postions -----------
-document.getElementById('marker1').style.left = -600+1200/totalSeconds*10*60
-document.getElementById('marker2').style.left = -600+1200/totalSeconds*(40*60)
-document.getElementById('marker3').style.left = -600+1200/totalSeconds*(10*60+3*60*60-15*60)
-
-
-if(cc<10*60) {
-document.getElementById('instruction').innerHTML = "10 Minutes Reading"
-}
-else if(cc<(40*60)) {document.getElementById('instruction').innerHTML = "Exam in Progress<br><span class='small'>You may not leave in the first 30 min</span>"}
-
-else if(cc<(10*60+3*60*60-15*60)) {document.getElementById('instruction').innerHTML = "Exam in Progress<br><span class='small'>You may leave during this time.</span>"}
-
-else if(cc<(10*60+3*60*60)) {document.getElementById('instruction').innerHTML = "Exam in Progress<br><span class='small'>You may not leave during this time.</span>"}
-
-else {document.getElementById('instruction').innerHTML = "End of Exam"}
-
-if(seconds==0&&minutes==0&&hours==0) {}
-else{setTimeout('tick()', 1000)}
-}
-//-->
+	 return false
+ }
+ 
+ 
 </script>
-</head>
 
 
-<body bgcolor="#094a12">
-<center>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<svg
-   width="43.972332mm"
-   height="62.149784mm"
-   viewBox="0 0 43.972332 62.149784"
-   version="1.1"
-   id="svg1"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs1" />
-  <g
-     id="layer1"
-     transform="translate(0.28989,-16.597271)">
-    <g
-       id="g1018"
-       transform="translate(-106.06313,69.498632)"
-       style="fill:#ffffff">
-      <path
-         id="path879"
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.366572;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 125.70236,-51.088669 c -1.0844,-0.0114 -2.16908,0.0855 -3.23041,0.293539 l -0.29284,0.0587 0.17612,0.84197 c 0.0977,-0.0181 0.17525,-0.0385 0.27279,-0.0587 3.22043,-0.62702 6.65581,-0.19639 9.6032,1.25294 2.96677,1.42992 5.42522,3.85936 6.9477,6.79663 1.52295,2.91888 2.04929,6.34646 1.50281,9.61752 -0.52715,3.270639 -2.14663,6.32603 -4.52775,8.598 -2.36179,2.31118 -5.4845,3.741 -8.74405,4.17191 -5.42616,0.72467 -11.10503,-1.76262 -14.28632,-6.2482 0,0.234819 0.91686,2.11558 3.35645,4.07454 1.21037,0.95944 2.81099,1.879989 4.72391,2.46792 1.81393,0.564869 3.91499,0.802809 6.02769,0.597109 l 0.27636,-0.0287 c 3.45476,-0.4111 6.75289,-1.97841 9.25095,-4.40746 2.51787,-2.40875 4.23471,-5.64033 4.7812,-9.08772 0.56627,-3.42762 0.0202,-7.0705 -1.58014,-10.1459 -1.60079,-3.09428 -4.19646,-5.659979 -7.3386,-7.168209 -2.14696,-1.050351 -4.53339,-1.600911 -6.91907,-1.62596 z m 0.0272,-1.8121 c -0.24636,-0.002 -0.4932,10e-4 -0.73959,0.01 v -6.71e-4 c -3.94277,0.11742 -7.84622,1.547221 -10.89122,4.054501 -0.0971,0.0783 -0.17525,0.137229 -0.27279,0.215499 l 0.64437,0.764651 c 0.0783,-0.078 0.17504,-0.137101 0.25346,-0.215511 2.88846,-2.370047 6.57776,-3.721497 10.30556,-3.838987 3.72776,-0.13719 7.49443,1.01782 10.51963,3.17243 3.04503,2.17444 5.36714,5.32814 6.47947,8.9123 1.13221,3.56479 1.07409,7.50159 -0.19475,11.02726 -1.24903,3.5257 -3.66953,6.620179 -6.79234,8.67675 -5.15221,3.466719 -12.19797,3.77994 -17.62413,0.802589 0.11735,0.23525 1.99087,1.724181 5.44561,2.468631 1.71725,0.37199 3.80549,0.509369 6.03056,0.156789 2.13576,-0.319529 4.39781,-1.127189 6.44007,-2.439269 l 0.25489,-0.16606 c 3.29821,-2.17394 5.8743,-5.44464 7.18182,-9.16646 1.32716,-3.70151 1.38601,-7.85462 0.19546,-11.63439 -1.17077,-3.78029 -3.63062,-7.12932 -6.85105,-9.42064 -3.01872,-2.148589 -6.68954,-3.350539 -10.38504,-3.379339 z m 3.30059,4.103899 -0.17542,0.72455 a 11.072365,11.072365 0 0 1 0.76107,0.215501 c 2.69329,0.822689 5.11375,2.52708 6.81167,4.7991 1.69791,2.252219 2.67374,5.053109 2.75216,7.873439 0.0779,2.82037 -0.74162,5.68039 -2.32258,8.0109 a 13.68001,13.68001 0 0 1 -6.53889,5.151349 13.699347,13.699347 0 0 1 -8.31446,0.371591 c -4.52793,-1.19472 -8.27543,-4.9157 -9.52446,-9.43997 a 0.30477778,0.30477778 0 0 0 -0.01,0.0773 v 0.0623 c 0.0138,0.49451 0.29741,2.12464 1.4935,4.12967 1.28219,2.24664 3.98987,4.8329 7.60853,5.85586 l 0.21838,0.0594 c 2.86914,0.803 5.97249,0.64657 8.76337,-0.39163 2.79088,-1.03821 5.23049,-2.957421 6.90904,-5.4449 1.6786,-2.46769 2.53761,-5.46457 2.45933,-8.46124 -0.0783,-2.97734 -1.11272,-5.9351 -2.90824,-8.305169 a 14.31719,14.31719 0 0 0 -7.1833,-5.053259 c -0.25367,-0.0783 -0.52628,-0.15656 -0.79973,-0.23484 z m 4.68454,4.25066 -0.39091,0.46968 a 11.478429,11.478429 0 0 1 2.36124,2.68342 c 1.28817,1.97825 1.97159,4.34822 1.93238,6.698549 0.0198,4.740141 -3.04479,9.303511 -7.43598,11.065911 -2.16659,0.90129 -4.60571,1.13617 -6.90905,0.6859 -2.30285,-0.45073 -4.46938,-1.60644 -6.14796,-3.2519 -2.81021,-2.72228 -4.11818,-6.87491 -3.41515,-10.733 -0.11734,0.11789 -0.62466,1.52805 -0.46823,3.74162 0.11693,2.19327 1.15094,5.18954 3.43447,7.42238 1.75684,1.743529 4.03988,2.95843 6.46013,3.428029 a 12.791459,12.791459 0 0 0 7.26058,-0.72527 c 4.62552,-1.841089 7.84711,-6.639379 7.82689,-11.63367 0.0193,-2.468159 -0.68312,-4.955139 -2.02975,-7.031469 -0.68322,-1.05799 -1.52244,-1.99791 -2.47866,-2.82018 z m -11.36018,0.82121 c -0.0971,-0.0193 -0.97497,0.137111 -2.1264,0.80331 -1.15143,0.64641 -2.53718,1.89979 -3.39581,3.60416 -1.36644,2.644 -1.44495,5.91485 -0.17614,8.59799 1.22971,2.72227 3.74779,4.7787 6.63626,5.4449 2.88849,0.7053 6.06963,1e-4 8.37246,-1.88012 2.22507,-1.76283 3.5911,-4.52473 3.68864,-7.34506 l -0.37086,0.02 c -0.0975,2.722269 -1.40509,5.386289 -3.55189,7.07085 -2.22507,1.80198 -5.28949,2.487559 -8.06103,1.802069 -2.79088,-0.646383 -5.21131,-2.644583 -6.38209,-5.249434 -1.21037,-2.585579 -1.15191,-5.738709 0.17542,-8.285119 1.07353,-2.11526 2.96667,-3.78014 5.19144,-4.58359 z m -5.40551,2.60539 c -0.11694,0.0391 -0.97639,0.88094 -1.69827,2.50658 -0.72236,1.60626 -1.15169,4.07433 -0.50761,6.5618 0.93688,3.87829 4.09915,7.070619 7.94432,8.06961 3.82537,1.057499 8.15809,-0.15685 10.8905,-3.035681 2.77162,-2.840139 3.84464,-7.227929 2.65407,-11.027969 -0.13675,-0.45025 -0.29235,-0.88073 -0.46824,-1.31164 l -0.4489,0.19617 c 0.17587,0.41113 0.33183,0.82269 0.4489,1.25365 1.13211,3.62322 0.1168,7.81483 -2.53736,10.53754 -2.61544,2.76132 -6.75299,3.91685 -10.40294,2.89893 -3.66933,-0.94053 -6.6943,-3.996551 -7.59207,-7.69803 -0.78082,-3.03583 -0.13633,-6.42433 1.7176,-8.95096 z" />
-      <path
-         id="path881"
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 106.06313,4.8936427 v 4.2616828 h 0.64396 V 7.2818254 h 0.64444 c 0.60483,0 1.28876,-0.3957149 1.26234,-1.1875797 0,-0.8179262 -0.67053,-1.200603 -1.27536,-1.200603 z m 0.65747,0.540729 h 0.52529 9.4e-4 c 0.3812,0 0.72245,0.2113689 0.73608,0.6468498 0,0.4489149 -0.35488,0.6463682 -0.73608,0.6463682 h -0.52626 z" />
-      <path
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 143.90698,4.8931601 v 4.262648 h 0.64396 v -4.262648 z"
-         id="path883" />
-      <path
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 133.992,4.8931601 v 4.262648 h 0.64444 V 7.2948486 h 2.19619 v 1.8609595 h 0.64444 v -4.262648 h -0.64444 v 1.8474528 h -2.19619 V 4.8931601 Z"
-         id="path885" />
-      <path
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 141.92158,4.8796534 v 2.0191751 c 0,0.3033556 -1.2e-4,0.6731557 0.0135,1.0028341 l -0.0135,0.013507 c -0.26303,-0.3166748 -0.64462,-0.7388908 -0.8943,-1.0158574 l -1.82817,-2.0061509 h -0.44666 V 9.155809 h 0.64395 V 7.0179734 c 0,-0.3166944 1.3e-4,-0.6861369 -0.0135,-1.0689182 h 0.0135 c 0.2894,0.3430451 0.65797,0.7784504 0.97341,1.1214956 l 1.98541,2.1778723 V 9.234431 h 0.21031 V 4.8796506 Z"
-         id="path887" />
-      <path
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 148.03554,4.8275586 c -1.05181,0 -2.28786,0.7389505 -2.28786,2.2169439 0,1.451623 1.20968,2.2034371 2.28786,2.2034371 0.5524,0 0.8551,-0.065742 1.11811,-0.210793 l 0.1312,-0.6203198 c -0.26301,0.1580858 -0.67021,0.2638529 -1.17021,0.2638529 -0.85453,0 -1.7095,-0.5411145 -1.7095,-1.649684 0,-1.1216179 0.88133,-1.6627072 1.7095,-1.6627072 0.43393,0 0.85444,0.145409 1.06506,0.2773587 l 0.10564,-0.5412115 c -0.26304,-0.1450738 -0.658,-0.2768771 -1.2498,-0.2768771 z"
-         id="path889" />
-      <path
-         id="path891"
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 111.66483,4.8010287 c -1.13092,0 -2.24926,0.8444104 -2.24926,2.2169438 0,1.3853466 1.11851,2.2167067 2.24926,2.2169438 1.13072,-2.408e-4 2.2483,-0.8449247 2.2483,-2.2169438 0,-1.3725334 -1.11773,-2.2169438 -2.2483,-2.2169438 z m 0,0.5542357 c 0.77545,0 1.60446,0.6074823 1.59084,1.6496839 0,1.0558484 -0.81539,1.6492014 -1.59084,1.6492014 -0.77606,0 -1.59132,-0.593353 -1.59132,-1.6492014 0,-1.055531 0.80222,-1.6496839 1.59132,-1.6496839 z" />
-      <path
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 126.02383,4.8931601 v 4.262648 4.826e-4 h 2.52469 V 8.6020549 h -1.88073 V 7.2953312 h 1.38101 V 6.741578 h -1.38101 V 5.4478785 h 1.64389 V 4.8931601 Z"
-         id="path893" />
-      <path
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 121.8292,4.8931601 v 0.5547184 h 1.23582 v 3.7079296 h 0.64395 V 5.4478785 h 1.3675 V 4.8931601 Z"
-         id="path895" />
-      <path
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 117.48985,4.8931601 1.61736,2.2960512 v 1.9665968 h 0.63094 V 7.1896939 l 1.64438,-2.2965338 h -0.65747 l -0.85522,1.2010856 c -0.11818,0.1715552 -0.28945,0.4222803 -0.40761,0.6072956 h -0.0135 c -0.1182,-0.1979153 -0.26268,-0.4228217 -0.39412,-0.6072956 l -0.85475,-1.2010856 z"
-         id="path897" />
-      <path
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 115.01774,4.8931601 v 4.262648 h 2.51118 V 8.6015724 H 115.6617 V 4.8931601 Z"
-         id="path899" />
-      <path
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 131.63855,4.8275586 c -1.05181,0 -2.28786,0.7389505 -2.28786,2.2169439 0,1.451623 1.22272,2.2034371 2.28786,2.2034371 0.55243,0 0.85489,-0.065742 1.11763,-0.210793 l 0.13121,-0.6203198 c -0.26273,0.1580858 -0.67052,0.2638529 -1.17022,0.2638529 -0.85453,0 -1.70902,-0.5411145 -1.70902,-1.649684 0,-1.1216179 0.88084,-1.6627072 1.70902,-1.6627072 0.43395,0 0.85476,0.145409 1.06506,0.2773587 l 0.10516,-0.5412115 c -0.26273,-0.1450738 -0.65701,-0.2768771 -1.24884,-0.2768771 z"
-         id="path901" />
-      <path
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 105.8919,1.7529721 v 0.3434427 h 43.60326 V 1.7529721 Z"
-         id="path903" />
-      <path
-         id="path905"
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 125.94472,-9.7142605 -3.5637,8.5248142 h 1.2498 l 0.90685,-2.1778723 h 3.26126 l 0.90732,2.1778723 h 1.27538 l -3.57673,-8.5248142 z m 0.21032,2.256497 h 0.0265 c 0.10516,0.3560852 0.23639,0.7523433 0.35454,1.0293641 h 4.9e-4 l 0.82821,2.0582466 h -2.39298 l 0.82821,-2.0582466 a 7.7904076,7.7904076 0 0 0 0.35503,-1.0293641 z" />
-      <path
-         id="path907"
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 110.20471,-9.7542973 c -2.2221,0 -4.43147,1.64988 -4.43147,4.355262 0,2.7183876 2.19603,4.367322 4.43147,4.367322 2.23545,0 4.43148,-1.6489344 4.43148,-4.367322 0,-2.692342 -2.19603,-4.355262 -4.43148,-4.355262 z m 0,1.0954483 v 4.825e-4 c 1.52545,0 3.15611,1.1743073 3.15611,3.2593312 0,2.0716507 -1.63066,3.2593322 -3.15611,3.2593322 -1.55149,0 -3.15562,-1.1743148 -3.15562,-3.2593322 0,-2.0850239 1.60413,-3.2598137 3.15562,-3.2598137 z" />
-      <path
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 115.59657,-9.5955991 v 1.0954482 h 2.69545 v 7.3107046 h 1.27537 v -7.3107046 h 2.68242 v -1.0954482 z"
-         id="path909" />
-      <path
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 135.66194,-9.7538147 c -2.07756,0 -4.50962,1.4515288 -4.50962,4.3678036 0,2.8372133 2.32752,4.3547794 4.58873,4.3547794 1.24907,0 2.26154,-0.2637996 3.077,-0.8971959 V -5.346457 h -3.1426 v 1.0293642 h 1.93283 v 1.7683454 c -0.39486,0.2771449 -0.99965,0.4355742 -1.7751,0.4355742 -1.7097,0 -3.39247,-1.0688417 -3.39247,-3.2463079 0,-2.2034885 1.72247,-3.2858612 3.36642,-3.2858612 0.8809,0 1.70905,0.2771132 2.32692,0.6728972 l 0.23685,-1.1079898 c -0.61818,-0.3961088 -1.55167,-0.6733798 -2.70896,-0.6733798 z"
-         id="path911" />
-      <path
-         id="path913"
-         style="font-variation-settings:normal;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.24697;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-         d="m 145.31404,-9.7538147 c -2.22212,0 -4.43147,1.6493946 -4.43147,4.3547794 0,2.7183708 2.19602,4.3678036 4.43147,4.3678036 2.23544,0 4.4451,-1.6489334 4.43147,-4.367321 0,-2.6923261 -2.19603,-4.3549539 -4.43147,-4.355262 z m 0,1.0949657 v 4.825e-4 c 1.52544,0 3.15562,1.1743138 3.15562,3.2593312 0,2.0716526 -1.63018,3.2593322 -3.15562,3.2593322 -1.53848,0 -3.14309,-1.1743409 -3.14309,-3.2593322 0,-2.0850174 1.59158,-3.2598137 3.14309,-3.2598137 z" />
-    </g>
-  </g>
-</svg>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<div id="clockOutput">3 hr Final Exam</div>
-<p>&nbsp;</p>
-<div id="timeline"><div id="cursor"></div><div id="marker1"></div><div id="marker2"></div><div id="marker3"></div></div>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<div id="instruction">Welcome.</div>
-<p>&nbsp;</p>
 
-<button onclick="tick()" id="startButton">Start Exam</button>
+<img src="logo.png" style="position:absolute; top:88vh; left:2vw">
 
-</body>
+
+    </body>
 </html>
-
-
-
